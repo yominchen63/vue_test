@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        .r {
+            width: 350px;
+            height: 150px;
+            margin: 0 auto;
+            background-color: cyan;
+        }
+ 
+        .n {
+            width: 350px;
+            height: 150px;
+            margin: 0 auto;
+            background-color: cyan;
+        }
+    </style>
+</head>
+ 
+<body>
+    <div id="app">
+        <div>
+            <button @click="deleteSelected">删除</button>
+            <button @click="ui()">添加</button>
+        </div>
+        <div>
+            <table border="1" cellspacing="0" cellpadding="0">
+                <tr>
+                    <th @click="selectAll">
+                        <input type="checkbox" v-model="allSelected">
+                    </th>
+                    <th>ID</th>
+                    <th>分类</th>
+                    <th>表题</th>
+                    <th>作者</th>
+                    <th>创建时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                <tr v-for="(itm, index) in list" :key="index">
+                    <td><input type="checkbox" v-model="selectedItems" :value="itm.id"></td>
+                    <td>{{itm.id}}</td>
+                    <td>{{itm.fenlei}}</td>
+                    <td>{{itm.title}}</td>
+                    <td>{{itm.zuozhe}}</td>
+                    <td>{{itm.time}}</td>
+                    <td>{{itm.sk}}</td>
+                    <td><button @click=" ui2(itm)">编辑</button> <button @click="del(itm)">删除</button></td>
+ 
+                </tr>
+ 
+            </table>
+        </div>
+        <div class="r" v-if="show">
+            <!-- <h3>添加数据 {{istime}}</h3> <br> -->
+            id <input type="text" v-model="istime.id"> <br>
+            分类 <input type="text" v-model="istime.fenlei"> <br>
+            表题<input type="text" v-model="istime.title"> <br>
+            作者<input type="text" v-model="istime.zuozhe"> <br>
+            <input type="datetime-local" v-model="istime.time">
+            <select v-model=" istime.sk">
+                <option value="">状态</option>
+                <option value="已发布">已发布</option>
+                <option value="待修改">待修改</option>
+                <option value="待审核">待审核</option>
+                <span>您选中了: {{istime.sk}}</span>
+            </select><br>
+            <button @click="addui">报存下一个</button> <button @click="chong">重置</button> <button @click="tui2">退出</button>
+ 
+        </div>
+        <div class="n" v-if="show1">
+            <!-- <h3>添加数据 {{istime}}</h3> <br> -->
+            id <input type="text" v-model="istime.id"> <br>
+            分类 <input type="text" v-model="istime.fenlei"> <br>
+            表题<input type="text" v-model="istime.title"> <br>
+            作者<input type="text" v-model="istime.zuozhe"> <br>
+            <input type="datetime-local" v-model="istime.time">
+            <select v-model=" istime.sk">
+                <option value="">状态</option>
+                <option value="已发布">已发布</option>
+                <option value="待修改">待修改</option>
+                <option value="待审核">待审核</option>
+                <span>您选中了: {{istime.sk}}</span> <br>
+ 
+            </select> <br>
+            <button @click="add">确定</button> <button @click="tui">退出</button>
+ 
+        </div>
+ 
+ 
+ 
+ 
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                allSelected: false,
+                selectedItems: [],
+                show1: false,
+                cz: '',
+                show: false,
+                istime: { id: '', fenlei: '', title: '', zuozhe: '', time: '', sk: '' },
+                list: [
+                    { id: '1', fenlei: '1', title: '文章标题01', zuozhe: 'robin', time: '2023-9-11', sk: '已发布' },
+                    { id: '2', fenlei: '1', title: '文章标题02', zuozhe: '', time: '2023-9-12', sk: '待修改' },
+                    { id: '3', fenlei: '2', title: '文章标题03', zuozhe: 'robin', time: '2023-9-13', sk: '已发布' },
+                    { id: '4', fenlei: '3', title: '文章标题04', zuozhe: 'robin', time: '2023-9-14', sk: '已发布' },
+                    { id: '5', fenlei: '2', title: '文章标题05', zuozhe: '', time: '2023-9-15', sk: '已发布' },
+                ]
+            },
+            methods: {
+                del(x) {
+                    var iaDele = confirm("你确认要删除" + x.id + "吗");
+                    if (iaDele) {
+ 
+                        for (let i = 0; i < this.list.length; i++) {
+                            if (this.list[i].id == x.id) {
+                                this.list.splice(i, 1)
+                            };
+                        };
+                    };
+                },
+                add(x) {
+ 
+                    var iaDele = confirm("你确认要修改" + x.id + "吗");
+ 
+                    if (iaDele) {
+ 
+                        for (let i = 0; i < this.list.length; i++) {
+                            if (this.list[i].id == x.id) {
+                                this.list.splice(i, 1, this.istime)
+                            };
+                        };
+                    };
+                },
+                addui() {
+ 
+                    this.list.push(this.istime)
+                    this.istime = { id: '', fenlei: '', title: '', zuozhe: '', time: '', sk: '' }
+                },
+ 
+                ui() {
+                    this.show = !this.show;
+ 
+                },
+                ui2(x) {
+                    this.show1 = !this.show1;
+                    this.istime = x;
+ 
+                },
+                chong() {
+                    this.istime = { id: '', fenlei: '', title: '', zuozhe: '', time: '', sk: '' }
+                },
+                tui() {
+                    this.show1 = !this.show1;
+                },
+                tui2() { this.show = !this.show; },
+                selectAll() {
+                    if(this.allSelected)
+                        this.allSelected = false
+                    else
+                        this.allSelected = true
+
+                    if (this.allSelected) {
+                        alert("select all\r\n");
+                        this.selectedItems = this.list.map(itm => itm.id);
+                    } else {
+                        alert("not select all\r\n");
+                        this.selectedItems = [];
+                    }
+                },
+                deleteSelected() {
+                    if (this.selectedItems.length === 0) {
+                        alert("请选择要删除的项");
+                        return;
+                    }
+ 
+                    var isDelete = confirm("确定要删除所选项吗？");
+                    console.log(isDelete);
+                    if (isDelete) {
+                        for (let i = this.list.length - 1; i >= 0; i--) {
+                            if (this.selectedItems.includes(this.list[i].id)) {
+                                this.list.splice(i, 1);
+                            }
+                        }
+                        this.selectedItems = [];
+                        this.allSelected = false;
+                    }
+                },
+            },
+ 
+ 
+        })
+    </script>
+ 
+</body>
+ 
+</html>
